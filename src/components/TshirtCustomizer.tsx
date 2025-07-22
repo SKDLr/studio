@@ -1,3 +1,4 @@
+
 'use client'
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -65,17 +66,50 @@ export function TshirtCustomizer() {
         toast({ title: 'Success', description: 'Custom T-Shirt added to cart!' });
     };
 
+    const selectedColorHex = colors.find(c => c.value === color)?.hex || '#FFFFFF';
+    const textColor = color === 'black' ? 'white' : 'black';
+
+
     return (
         <div className="container py-12">
             <h1 className="text-4xl font-bold font-headline mb-8">Customize Your T-Shirt</h1>
             <div className="grid md:grid-cols-2 gap-12 items-start">
                 <div className="sticky top-24">
                     <Card>
-                        <CardContent className="p-4 flex items-center justify-center aspect-square relative" style={{backgroundColor: colors.find(c => c.value === color)?.hex}}>
-                            <div className="absolute top-1/3 text-center w-full px-4 pointer-events-none">
-                                {design && <Image src={design} alt="custom design" width={150} height={150} className="mx-auto" />}
-                                {text && <p className="text-2xl font-bold mt-2 break-words" style={{ color: color === 'black' ? 'white' : 'black' }}>{text}</p>}
-                            </div>
+                        <CardContent className="p-4 flex items-center justify-center aspect-square relative">
+                           <svg viewBox="0 0 200 200" className="w-full h-full">
+                                <path 
+                                    d="M 50,5 C 50,5 55,0 65,0 H 135 C 145,0 150,5 150,5 L 185,20 L 175,50 L 140,40 V 195 H 60 V 40 L 25,50 L 15,20 L 50,5 Z" 
+                                    fill={selectedColorHex} 
+                                    stroke="gray" 
+                                    strokeWidth="1"
+                                />
+                                {design && (
+                                    <image href={design} x="75" y="60" height="50" width="50"/>
+                                )}
+                                {text && (
+                                    <text
+                                        x="100"
+                                        y={design ? "130" : "100"}
+                                        fontFamily="Arial, sans-serif"
+                                        fontSize="14"
+                                        fill={textColor}
+                                        textAnchor="middle"
+                                        dominantBaseline="middle"
+                                        className="font-bold break-words"
+                                    >
+                                        {text.split(' ').map((word, index, words) => (
+                                            <tspan 
+                                                key={index}
+                                                x="100" 
+                                                dy={index === 0 ? "0" : "1.2em"}
+                                            >
+                                                {word}
+                                            </tspan>
+                                        ))}
+                                    </text>
+                                )}
+                            </svg>
                         </CardContent>
                     </Card>
                 </div>
