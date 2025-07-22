@@ -68,15 +68,17 @@ export function TshirtCustomizer() {
     return (
         <div className="container py-12">
             <h1 className="text-4xl font-bold font-headline mb-8">Customize Your T-Shirt</h1>
-            <div className="grid md:grid-cols-2 gap-12">
-                <Card>
-                    <CardContent className="p-4 flex items-center justify-center h-full aspect-square relative" style={{backgroundColor: colors.find(c => c.value === color)?.hex}}>
-                        <div className="absolute top-1/3 text-center w-full px-4 pointer-events-none">
-                            {design && <Image src={design} alt="custom design" width={150} height={150} className="mx-auto" />}
-                            {text && <p className="text-2xl font-bold mt-2 break-words" style={{ color: color === 'black' ? 'white' : 'black' }}>{text}</p>}
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="grid md:grid-cols-2 gap-12 items-start">
+                <div className="sticky top-24">
+                    <Card>
+                        <CardContent className="p-4 flex items-center justify-center aspect-square relative" style={{backgroundColor: colors.find(c => c.value === color)?.hex}}>
+                            <div className="absolute top-1/3 text-center w-full px-4 pointer-events-none">
+                                {design && <Image src={design} alt="custom design" width={150} height={150} className="mx-auto" />}
+                                {text && <p className="text-2xl font-bold mt-2 break-words" style={{ color: color === 'black' ? 'white' : 'black' }}>{text}</p>}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
 
                 <div className="space-y-8">
                     <div>
