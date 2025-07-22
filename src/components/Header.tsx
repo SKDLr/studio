@@ -67,7 +67,9 @@ export function Header() {
               <span className="sr-only">Shopping Cart</span>
             </Button>
           </Link>
-          <Button>Sign In</Button>
+          <Button asChild>
+            <Link href="/sign-in">Sign In</Link>
+          </Button>
         </div>
       </div>
     </header>
