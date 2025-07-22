@@ -1,12 +1,42 @@
 'use client';
 import Link from 'next/link';
-import { BookOpen, Menu, ShoppingCart, Shirt } from 'lucide-react';
+import { BookOpen, Menu, ShoppingCart, Shirt, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+
 
 export function Header() {
   const { itemCount } = useCart();
+  const { user, loading } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      toast({ title: 'Success', description: 'Signed out successfully.' });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign Out Failed',
+        description: error.message,
+      });
+    }
+  };
+
   const navLinks = [
     { href: '/customize/t-shirt', label: 'T-Shirts', icon: <Shirt className="h-5 w-5" /> },
     { href: '/customize/book', label: 'Books', icon: <BookOpen className="h-5 w-5" /> },
@@ -67,9 +97,40 @@ export function Header() {
               <span className="sr-only">Shopping Cart</span>
             </Button>
           </Link>
-          <Button asChild>
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
+          
+          {loading ? (
+            <div className="h-9 w-20 animate-pulse rounded-md bg-muted" />
+          ) : user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || user.email || undefined} />
+                    <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">My Account</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild>
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

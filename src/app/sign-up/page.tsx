@@ -4,6 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/lib/firebase"
+import { useToast } from "@/hooks/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -35,6 +39,8 @@ const formSchema = z.object({
 
 
 export default function SignUpPage() {
+  const router = useRouter()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,8 +50,18 @@ export default function SignUpPage() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
+      toast({ title: "Success", description: "Account created successfully. Please sign in." });
+      router.push('/sign-in')
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: 'Sign Up Failed',
+            description: error.message,
+        });
+    }
   }
 
   return (
@@ -97,7 +113,9 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">Sign Up</Button>
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Creating Account...' : 'Sign Up'}
+              </Button>
             </form>
           </Form>
         </CardContent>

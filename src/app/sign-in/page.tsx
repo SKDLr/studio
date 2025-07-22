@@ -4,6 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/lib/firebase"
+import { useToast } from "@/hooks/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,6 +34,8 @@ const formSchema = z.object({
 })
 
 export default function SignInPage() {
+  const router = useRouter()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,8 +44,18 @@ export default function SignInPage() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password)
+      toast({ title: "Success", description: "Signed in successfully." });
+      router.push('/')
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign In Failed',
+        description: error.message,
+      });
+    }
   }
 
   return (
@@ -51,7 +67,7 @@ export default function SignInPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form. handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -78,7 +94,9 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Signing In...' : 'Sign In'}
+                </Button>
             </form>
           </Form>
         </CardContent>
