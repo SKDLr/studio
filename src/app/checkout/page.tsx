@@ -98,7 +98,7 @@ export default function CheckoutPage() {
       
       await saveOrder(orderData);
 
-      await sendOrderConfirmationEmail({
+      const emailResult = await sendOrderConfirmationEmail({
         customerName: values.name,
         customerEmail: values.email,
         shippingAddress: `${values.address}, ${values.city}, ${values.postalCode}, ${values.country}`,
@@ -111,7 +111,7 @@ export default function CheckoutPage() {
       });
 
       clearCart();
-      toast({ title: "Success", description: "Order placed successfully!" });
+      toast({ title: "Success", description: `Order placed successfully! ${emailResult.message}` });
       router.push('/order-confirmation');
     } catch (error: any) {
       console.error("Order placement failed:", error);
