@@ -13,10 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { sendOrderConfirmationEmail } from "@/ai/flows/send-order-confirmation-email";
 import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { saveOrder } from "@/services/order";
+import emailjs from '@emailjs/browser';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -96,25 +96,35 @@ export default function CheckoutPage() {
         createdAt: new Date(),
       };
       
-      await saveOrder(orderData);
+      const orderId = await saveOrder(orderData);
 
-      const emailResult = await sendOrderConfirmationEmail({
-        customerName: values.name,
-        customerEmail: values.email,
-        shippingAddress: `${values.address}, ${values.city}, ${values.postalCode}, ${values.country}`,
-        orderItems: cartItems.map(item => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        total: total.toFixed(2),
-      });
+      // Send email using EmailJS
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (serviceId && templateId && publicKey) {
+        const emailParams = {
+          to_name: values.name,
+          to_email: values.email,
+          from_name: "Chapter & Stitch",
+          order_id: orderId,
+          order_total: total.toFixed(2),
+          order_items: cartItems.map(item => `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n'),
+          shipping_address: orderData.shippingAddress
+        };
+        
+        await emailjs.send(serviceId, templateId, emailParams, publicKey);
+        toast({ title: "Success", description: "Order placed successfully! A confirmation email has been sent." });
+      } else {
+        console.warn("EmailJS credentials not found in .env. Skipping email.");
+        toast({ title: "Success", description: "Order placed successfully! (Email not sent - admin configuration needed)." });
+      }
 
       clearCart();
-      toast({ title: "Success", description: `Order placed successfully! ${emailResult.message}` });
       router.push('/order-confirmation');
     } catch (error: any) {
-      console.error("Order placement failed:", error);
+      console.error("Order placement or email sending failed:", error);
       toast({
         variant: 'destructive',
         title: 'Order Failed',
