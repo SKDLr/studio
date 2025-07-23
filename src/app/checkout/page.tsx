@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { sendOrderConfirmationEmail } from "@/ai/flows/send-order-confirmation-email";
 import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { saveOrder } from "@/services/order";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -60,8 +61,43 @@ export default function CheckoutPage() {
     }
   }, [user, authLoading, form, itemCount, router, toast]);
 
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal > 0 ? 5.00 : 0;
+  const total = subtotal + shipping;
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) {
+        toast({
+            variant: 'destructive',
+            title: 'Not Signed In',
+            description: "You must be signed in to place an order.",
+        });
+        return;
+    }
+    
     try {
+      const orderData = {
+        userId: user.uid,
+        customerName: values.name,
+        customerEmail: values.email,
+        shippingAddress: `${values.address}, ${values.city}, ${values.postalCode}, ${values.country}`,
+        orderItems: cartItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          customization: item.customization || {},
+        })),
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total,
+        paymentMethod: values.paymentMethod,
+        status: 'pending',
+        createdAt: new Date(),
+      };
+      
+      await saveOrder(orderData);
+
       await sendOrderConfirmationEmail({
         customerName: values.name,
         customerEmail: values.email,
@@ -71,25 +107,22 @@ export default function CheckoutPage() {
           quantity: item.quantity,
           price: item.price
         })),
-        total: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 5).toFixed(2),
+        total: total.toFixed(2),
       });
 
       clearCart();
       toast({ title: "Success", description: "Order placed successfully!" });
       router.push('/order-confirmation');
     } catch (error: any) {
+      console.error("Order placement failed:", error);
       toast({
         variant: 'destructive',
         title: 'Order Failed',
-        description: "There was an error placing your order. Please try again.",
+        description: error.message || "There was an error placing your order. Please try again.",
       });
     }
   }
   
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal > 0 ? 5.00 : 0;
-  const total = subtotal + shipping;
-
   if (authLoading || !user) {
     return (
         <div className="container py-12">
@@ -221,5 +254,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
