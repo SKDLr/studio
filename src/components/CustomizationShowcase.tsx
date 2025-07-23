@@ -12,7 +12,7 @@ export function CustomizationShowcase() {
         <div className="grid md:grid-cols-2 gap-8">
           <Link href="/customize/t-shirt">
             <Card className="relative group overflow-hidden rounded-lg shadow-lg">
-              <Image src="https://placehold.co/800x600" alt="T-shirt customization" width={800} height={600} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" data-ai-hint="tshirt blank"/>
+              <Image src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop" alt="T-shirt customization" width={800} height={600} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" data-ai-hint="tshirt blank"/>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10 flex flex-col justify-end p-8">
                 <h3 className="text-3xl font-bold font-headline text-white">Customize a T-Shirt</h3>
                 <p className="text-white/80 mt-2 max-w-md">Design your own shirt from scratch with text and graphics.</p>
@@ -26,7 +26,7 @@ export function CustomizationShowcase() {
           </Link>
           <Link href="/customize/book">
             <Card className="relative group overflow-hidden rounded-lg shadow-lg">
-              <Image src="https://placehold.co/800x600" alt="Book customization" width={800} height={600} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" data-ai-hint="book closed"/>
+              <Image src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&auto=format&fit=crop" alt="Book customization" width={800} height={600} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" data-ai-hint="book closed"/>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10 flex flex-col justify-end p-8">
                 <h3 className="text-3xl font-bold font-headline text-white">Personalize a Book</h3>
                 <p className="text-white/80 mt-2 max-w-md">Create a custom book with your own title, author, and cover.</p>
