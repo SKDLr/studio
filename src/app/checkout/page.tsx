@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { sendOrderConfirmationEmail } from "@/ai/flows/send-order-confirmation-email";
 import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -30,7 +31,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { cartItems, clearCart, itemCount } = useCart();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,13 +47,18 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    if (user?.email) {
-      form.setValue("email", user.email);
+    if (!authLoading) {
+      if (!user) {
+        toast({ title: 'Please Sign In', description: 'You need to be signed in to place an order.' });
+        router.replace('/sign-in');
+      } else if (user.email) {
+        form.setValue("email", user.email);
+      }
     }
     if (itemCount === 0) {
       router.replace('/');
     }
-  }, [user, form, itemCount, router]);
+  }, [user, authLoading, form, itemCount, router, toast]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -84,6 +90,43 @@ export default function CheckoutPage() {
   const shipping = subtotal > 0 ? 5.00 : 0;
   const total = subtotal + shipping;
 
+  if (authLoading || !user) {
+    return (
+        <div className="container py-12">
+            <h1 className="text-4xl font-bold font-headline mb-8">Checkout</h1>
+            <div className="grid md:grid-cols-2 gap-12">
+                <div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="font-headline">Shipping Information</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <Skeleton className="h-10 w-full" />
+                            <Skeleton className="h-10 w-full" />
+                            <Skeleton className="h-10 w-full" />
+                            <div className="grid grid-cols-2 gap-4">
+                                <Skeleton className="h-10 w-full" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                            <Skeleton className="h-10 w-full" />
+                        </CardContent>
+                    </Card>
+                </div>
+                <div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="font-headline">Your Order</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                           <Skeleton className="h-24 w-full" />
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    )
+  }
+
   return (
     <div className="container py-12">
       <h1 className="text-4xl font-bold font-headline mb-8">Checkout</h1>
@@ -100,7 +143,7 @@ export default function CheckoutPage() {
                     <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input {...field} readOnly /></FormControl><FormMessage /></FormItem>
                   )} />
                    <FormField control={form.control} name="address" render={({ field }) => (
                     <FormItem><FormLabel>Address</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -178,3 +221,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
