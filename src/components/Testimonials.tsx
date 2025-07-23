@@ -5,9 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star } from "lucide-react"
 
 const testimonials = [
-  { name: 'Sarah L.', avatar: 'https://placehold.co/100x100', text: "The custom t-shirt I ordered exceeded my expectations! The print quality is fantastic and the shirt itself is so soft. I'll definitely be ordering more.", rating: 5, hint: "woman smiling" },
-  { name: 'Mike R.', avatar: 'https://placehold.co/100x100', text: "I designed a book for my grandmother's birthday and she absolutely loved it. The process was simple and the final product was beautiful. Highly recommend!", rating: 5, hint: "man portrait" },
-  { name: 'Jessica P.', avatar: 'https://placehold.co/100x100', text: "Chapter & Stitch is my new go-to for unique gifts. The quality is consistently great and their customer service is top-notch.", rating: 5, hint: "woman face" },
+  { name: 'Sarah L.', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=100&auto=format&fit=crop', text: "The custom t-shirt I ordered exceeded my expectations! The print quality is fantastic and the shirt itself is so soft. I'll definitely be ordering more.", rating: 5, hint: "woman smiling" },
+  { name: 'Mike R.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop', text: "I designed a book for my grandmother's birthday and she absolutely loved it. The process was simple and the final product was beautiful. Highly recommend!", rating: 5, hint: "man portrait" },
+  { name: 'Jessica P.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop', text: "Chapter & Stitch is my new go-to for unique gifts. The quality is consistently great and their customer service is top-notch.", rating: 5, hint: "woman face" },
 ];
 
 export function Testimonials() {
