@@ -107,7 +107,6 @@ export default function CheckoutPage() {
         const emailParams = {
           to_name: values.name,
           to_email: values.email,
-          from_name: "Chapter & Stitch",
           order_id: orderId,
           order_total: total.toFixed(2),
           order_items: cartItems.map(item => `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n'),
@@ -128,7 +127,7 @@ export default function CheckoutPage() {
       toast({
         variant: 'destructive',
         title: 'Order Failed',
-        description: error.message || "There was an error placing your order. Please try again.",
+        description: "There was an error placing your order. Please check console for details.",
       });
     }
   }
