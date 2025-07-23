@@ -12,7 +12,7 @@ import Link from "next/link"
 
 const slides = [
   {
-    image: "https://placehold.co/1600x800",
+    image: "https://dutchuncles.in/wp-content/uploads/2021/02/Tech-trends-to-rule-in-fashion-e-commerce-feature-01.jpg",
     hint: "fashion model",
     title: "Wear Your Story",
     description: "Create custom t-shirts that are uniquely you. High-quality prints on comfortable fabric.",
@@ -20,7 +20,7 @@ const slides = [
     buttonLink: "/customize/t-shirt",
   },
   {
-    image: "https://placehold.co/1600x800",
+    image: "https://sfycdn.speedsize.com/c93e51c9-c4ee-4999-a19a-e064e9375152/https://www.percivalclo.com/cdn/shop/files/PERCIVAL_MENSWEAR_-2-_1_406cfa72-c59b-4186-ae61-da113e533fd5.jpg?v=1738515525&width=1200",
     hint: "book cover",
     title: "Publish Your Passion",
     description: "Bring your stories to life. Design and order your own personalized books.",
@@ -28,7 +28,7 @@ const slides = [
     buttonLink: "/customize/book",
   },
   {
-    image: "https://placehold.co/1600x800",
+    image: "https://blog.bridgemanimages.com/hubfs/book.jpg",
     hint: "clothing rack",
     title: "Summer Collection is Here!",
     description: "Check out our latest featured designs, ready to ship.",
