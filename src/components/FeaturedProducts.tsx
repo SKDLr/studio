@@ -7,10 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart } from "lucide-react";
 
 const products: Omit<CartItem, 'quantity'>[] = [
-  { id: 'prod1', name: 'The Adventurer Tee', price: 24.99, image: 'https://placehold.co/400x400', hint: 'tshirt design' },
-  { id: 'prod2', name: 'Minimalist Lines Tee', price: 22.99, image: 'https://placehold.co/400x400', hint: 'abstract tshirt' },
-  { id: 'prod3', name: 'Classic Hardcover', price: 39.99, image: 'https://placehold.co/400x400', hint: 'blank book' },
-  { id: 'prod4', name: 'The Novelist Journal', price: 29.99, image: 'https://placehold.co/400x400', hint: 'leather journal' },
+  { id: 'prod1', name: 'The Adventurer Tee', price: 24.99, image: 'https://hornadygear.com/wp-content/uploads/2023/01/31100-Hornady-Mountain-Tee-400x400.jpg', hint: 'tshirt design' },
+  { id: 'prod2', name: 'Minimalist Lines Tee', price: 22.99, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfH6e5RzKyu46h-a67lI_KdplL4nUgggXkAA&s', hint: 'abstract tshirt' },
+  { id: 'prod3', name: 'Classic Hardcover', price: 39.99, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJzQlPV6glBguougi-eh8IxxMnJQotVDsv4pNy1t2Lz2W-pVIgJGoLvMMNHh1vYun6s8c&usqp=CAU', hint: 'blank book' },
+  { id: 'prod4', name: 'The Novelist Journal', price: 29.99, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoVlxhKUI13Ncwjdr9UxUt6jkvA9rx9WiFm_4A8zF2-djO4GOmpH0Y-GeFYQ5Pex9Ww9w&usqp=CAU', hint: 'leather journal' },
 ];
 
 export function FeaturedProducts() {
