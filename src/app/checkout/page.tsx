@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -106,7 +107,7 @@ export default function CheckoutPage() {
       if (serviceId && templateId && publicKey) {
         const emailParams = {
           to_name: values.name,
-          to_email: values.email,
+          email: values.email,
           order_id: orderId,
           order_total: total.toFixed(2),
           order_items: cartItems.map(item => `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n'),
